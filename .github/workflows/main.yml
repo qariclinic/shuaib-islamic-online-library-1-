@@ -1,6 +1,5 @@
-name: Node.js CI
+name: Node.js CI with Artifact
 
-# یہ workflow ہر push اور pull request پر trigger ہوگا
 on:
   push:
     branches: [ main ]
@@ -13,29 +12,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Step 1: Checkout repository
+    # 1️⃣ Checkout repo
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Step 2: Setup Node.js
+    # 2️⃣ Setup Node.js
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 20 # آپ اپنی required version یہاں ڈال سکتے ہیں
+        node-version: 20
 
-    # Step 3: Install dependencies
+    # 3️⃣ Install dependencies
     - name: Install dependencies
       run: npm install
 
-    # Step 4: Run build (Vite/TypeScript build)
+    # 4️⃣ Build project
     - name: Build project
       run: npm run build
 
-    # Step 5: Run tests (اگر آپ کے پاس tests ہیں)
-    - name: Run tests
-      run: npm test || echo "No tests found"
-
-    # Optional: Run lint
-    - name: Run lint
-      run: npm run lint || echo "No lint configured"
-
+    # 5️⃣ Save build output as artifact
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifact
+        path: dist/
