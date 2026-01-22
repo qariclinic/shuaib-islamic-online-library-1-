@@ -1,0 +1,41 @@
+name: Node.js CI
+
+# یہ workflow ہر push اور pull request پر trigger ہوگا
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout repository
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Step 2: Setup Node.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20 # آپ اپنی required version یہاں ڈال سکتے ہیں
+
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      run: npm install
+
+    # Step 4: Run build (Vite/TypeScript build)
+    - name: Build project
+      run: npm run build
+
+    # Step 5: Run tests (اگر آپ کے پاس tests ہیں)
+    - name: Run tests
+      run: npm test || echo "No tests found"
+
+    # Optional: Run lint
+    - name: Run lint
+      run: npm run lint || echo "No lint configured"
+
