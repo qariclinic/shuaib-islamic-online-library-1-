@@ -1,4 +1,4 @@
-name: Node.js Build & Deploy
+name: Build and Deploy to GitHub Pages
 
 on:
   push:
@@ -6,18 +6,22 @@ on:
   pull_request:
     branches: [ main ]
 
-jobs:
-  build-and-deploy:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
+jobs:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-    # 1️⃣ Checkout repo
+    # 1️⃣ Checkout source code
     - name: Checkout repository
       uses: actions/checkout@v3
 
     # 2️⃣ Setup Node.js
-    - name: Setup Node.js
+    - name: Setup Node
       uses: actions/setup-node@v3
       with:
         node-version: 20
@@ -26,20 +30,21 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    # 4️⃣ Build project
+    # 4️⃣ Build project (Vite default output: dist/)
     - name: Build project
       run: npm run build
 
-    # 5️⃣ Save build artifact
-    - name: Upload build artifact
-      uses: actions/upload-artifact@v4
+    # 5️⃣ Upload build output to GitHub Pages artifact
+    - name: Upload Pages Artifact
+      uses: actions/upload-pages-artifact@v3
       with:
-        name: build-artifact
-        path: dist/
+        path: ./dist
 
-    # 6️⃣ Deploy to GitHub Pages (v6)
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    # 6️⃣ Deploy to GitHub Pages branch
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v6
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist
+      uses: actions/deploy-pages@v4
