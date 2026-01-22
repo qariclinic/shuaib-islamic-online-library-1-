@@ -1,0 +1,7 @@
+{
+  "name": "Shuaib Islamic Online Library",
+  "description": "A comprehensive, professional, and modern digital library for Islamic research, featuring Quran, Hadith, Fiqh, and scholarly books. Founded by Hafiz Mufti Muhammad Shuaib Khan Allai.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
