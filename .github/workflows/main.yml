@@ -1,4 +1,4 @@
-name: Node.js CI with Artifact
+name: Node.js Build & Deploy
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-deploy:
 
     runs-on: ubuntu-latest
 
@@ -30,9 +30,16 @@ jobs:
     - name: Build project
       run: npm run build
 
-    # 5️⃣ Upload artifact (use v4 now)
+    # 5️⃣ Save build artifact
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
       with:
         name: build-artifact
         path: dist/
+
+    # 6️⃣ Deploy to GitHub Pages
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v7
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
